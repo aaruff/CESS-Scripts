@@ -170,7 +170,7 @@ copy_file(){
 #-
 # Copy all the files specified in the 
 # $1 (source_dir) parameter to the $2 (destination_dir)
-# directory.
+# directory... Using a bit of recurive voodo!
 #
 # Param $1: source_dir 
 # Param $2: destination_dir
