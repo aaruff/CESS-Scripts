@@ -233,6 +233,12 @@ copy_directory(){
 # set command line arguments flags
 set_flags "${@}"
 
+# nothing to do if the source directory doesn't exist
+if [ ! -d "$SRC_DIR" ]; then
+    echo "Source Directory -->[$SRC_DIR]<-- Not Found!"
+    exit 1
+fi
+
 # create the destination directory if it doesn't already exist
 create_directory $DEST_PATH
 
