@@ -38,17 +38,17 @@ validate_arguments(){
     local num_arguments=$1
     if [ "$num_arguments" != 2 ]; then
         display "Two arguments are required: $#"
-        display "Usage:\n\tlink_brewed_bin.sh /source/path /source/destination\n"
+        display "Usage:\n\tlink_brewed_bin.sh /source/path /source/destination"
     elif [ "${args[0]}" = "" ]; then
         display "arg 1 empty: ${args[0]}"
-        display "Usage:\n\tlink_brewed_bin.sh /source/path /source/destination\n"
+        display "Usage:\n\tlink_brewed_bin.sh /source/path /source/destination"
     elif [ "${args[1]}" = "" ]; then
         display "arg 2 empty: ${args[1]}"
-        display "Usage:\n\tlink_brewed_bin.sh /source/path /source/destination\n"
+        display "Usage:\n\tlink_brewed_bin.sh /source/path /source/destination"
     elif [ ! -d "${args[0]}" ]; then
-        display "Directory ${args[0]} is invalid or does not exits.\n"
+        display "Directory ${args[0]} is invalid or does not exits."
     elif [ ! -d "${args[1]}" ]; then
-        display "Directory ${args[1]} is invalid or does not exits.\n"
+        display "Directory ${args[1]} is invalid or does not exits."
     else
         ARGUMENTS_VALID=1
     fi
@@ -73,9 +73,9 @@ link_bin_files(){
     for file in ${files[@]##*/}; do
         # Error: not executable 
         if [ ! -x $file ]; then
-            display "Skipping non executable $file...\n"
+            display "Skipping non executable $file..."
         else
-            display "Linking ${file} to ${args[1]}/$file\n"
+            display "Linking ${file} to ${args[1]}/$file"
             ln -s ${args[0]}/$file ${args[1]}/$file
         fi
     done 
