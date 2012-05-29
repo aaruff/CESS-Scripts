@@ -72,7 +72,7 @@ link_bin_files(){
     # see: http://mywiki.wooledge.org/BashFAQ/073
     for file in ${files[@]##*/}; do
         # Error: not executable 
-        if [ ! -x $file ]; then
+        if [ ! -f $file ] || [ ! -x $file ] || [ -L $file ]; then
             display "Skipping non executable $file..."
         else
             display "Linking ${file} to ${args[1]}/$file"
