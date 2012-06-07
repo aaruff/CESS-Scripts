@@ -1,9 +1,6 @@
-Admin Scripts
+CESS Scripts
 =============
-This is a collection of scripts I have written for small
-administrative tasks both for myself and for the Center for
-Experimental Social Science.
-
+This is a collection of scripts for small administrative tasks.
 
 Z-Tree Setup Script
 --------------
