@@ -13,8 +13,12 @@ Brew Binary Linker
 A Bash Script used to link binaries installed using homebrew
 to the /usr/local/bin directory.
 
-Project Mover
+Sync Project
 ------------------
-A Bash Script used to move my web projects from my development
-directory to my web directory. The script takes source and 
+A Bash Script used to sync web projects in development with 
+source located in the web folder. The script takes source and 
 destination directories as an argument.
+
+License
+------------------
+[License: Academic Free License version 3.0](http://www.opensource.org/licenses/afl-3.0.php)
