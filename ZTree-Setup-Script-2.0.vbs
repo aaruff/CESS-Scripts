@@ -1,13 +1,39 @@
-' This script was created for use at the Center for Experimental Social Science.
-' Author: Anwar A. Ruff
-' Project: CESS Lab Tool Kit
+'----------------------------------------------------------------------------------
+' Purpose:      The purpose of this script is to create a Z-Tree experimenter folder
+'               containing output folders (data, treatment, payment, etc.) and all of
+'               the lab supported versions of Z-Tree.
+'
+' Requirements: -- Windows XP or greater
+'               -- Z-Leaf files must be located in 
+'
+' Author:   Anwar A. Ruff at the Center for Experimental Social Science
+'
+' License:  The Academic Free License 3.0
+'----------------------------------------------------------------------------------
 Option Explicit
 On Error Resume Next
 
+'-
+' The location where this script will look for all supported version of Z-Tree.
+' Note: The Z-Tree files must follow this naming convention (ztree-x.y.z.exe)
+'       where x, y, and z are integers. For example ztree-3.2.1.exe
+'-
+Dim ZTreePath
+set ZTreePath = "C:\CESS\Z-Tree"
+
+'--
+' Searches for a duplicated folder name in the ZTreePath. If found
+' true is returned, otherwise false is returned.
+'
+' @param String folderName
+' @param String folderPath
+' 
+' @return boolean
+'--
 Function duplicateFolderFound(folderName, folderPath)
 	Dim FileSystem
 	Set FileSystem = CreateObject("Scripting.FileSystemObject")
-	
+
 	Dim folder
 	set folder = FileSystem.GetFolder(folderPath)
 	
@@ -23,16 +49,21 @@ Function duplicateFolderFound(folderName, folderPath)
 	duplicateFolderFound = false
 End Function
 
+'--
+' Prompts the experimenter for a folder name (preferably a last name) and
+' the result is returned. If no value is entered the experimenter is prompted
+' MAX_ATTEMPTS times and the last result is returned.
+'
+' @return String
+'--
 Function getFolderName()
-	Dim MAX_ATTEMPTS
-	MAX_ATTEMPTS = 3
-	
-	Dim folderEntry
-	folderEntry = InputBox("Enter your last name:","Create Z-Tree Directory","")
+    'Prompt experimenter for folder name
+    Dim folderEntry : folderEntry = InputBox("Enter your last name:","Create Z-Tree Directory","")
 
-	Dim numTries
-	numTries = 0
+    Dim MAX_ATTEMPTS : MAX_ATTEMPTS = 3 
+    Dim numTries : numTries = 0
 	Do While folderEntry = "" And numTries < MAX_ATTEMPTS
+        ' Ask experimenter again
 		folderEntry = InputBox("Please enter your last name:","Create Z-Tree Directory","")
 		numTries = numTries + 1
 	Loop
@@ -40,39 +71,45 @@ Function getFolderName()
 	getFolderName = folderEntry
 End Function
 
-Function createFolder(absolutePath)
-End Function
 
+'--
+' Creates the Z-Tree folder specified by the experimenter and all output sub-folders.
+' 
+' @param String experimentFolderPath experimenter folder path
+' @param String folderEntry experimenter folder name entry
+'--
 Function createExperimenterFolders(experimenterFolderPath, folderEntry)
-	Dim FileSystem
-	Set FileSystem = CreateObject("Scripting.FileSystemObject")
-	Dim experimenterPath
-	experimenterPath = experimenterFolderPath & "\" & folderEntry
+    Dim FileSystem : Set FileSystem = CreateObject("Scripting.FileSystemObject")
+    Dim experimenterPath : experimenterPath = experimenterFolderPath & "\" & folderEntry
 	
-	' Experimenter folder
+	' Create Experimenter Z-Tree folder
 	FileSystem.CreateFolder(ExperimenterPath)
+
+    ' Z-Tree output folders
+    Dim folderNames : folderNames = Array("Data","Garbage", "Payments", "Treatments", "Treatment-Backups")
+    Dim garbageSubFolders : garbageSubFolders = Array("eec", "gsf", "tmp")
 	
-	Dim folderNames
-	folderNames = Array("Data","Garbage", "Payments", "Treatments", "Treatment-Backups")
-	Dim garbageSubFolders
-	garbageSubFolders = Array("eec", "gsf", "tmp")
-	
-	'Experimenter sub folders
+	'Create Experimenter folders
 	Dim folderName
 	For Each folderName In folderNames
 		FileSystem.CreateFolder(experimenterPath & "\" & folderName)
 	Next
 	
-	'Experimenter garbage sub folders
+	'Create Experimenter garbage sub folders
 	Dim subFolder
 	For Each subFolder In garbageSubFolders
 		FileSystem.CreateFolder(experimenterPath & "\Garbage\" & subFolder)
 	Next
 End Function
 
+'--
+' Creates a Z-Tree link for each Z-Tree binary found in ZTreePath.
+' 
+' @param String experimenterFolderPath
+' @parma String folderEntry
+'--
 Function createZTreeShortcuts(experimenterFolderPath, folderEntry)
-	Dim FileSystem
-	Set FileSystem = CreateObject("Scripting.FileSystemObject")
+    Dim FileSystem : Set FileSystem = CreateObject("Scripting.FileSystemObject")
 	Dim ZTreePathConfig
 	ZTreePathConfig = " /gsfdir ..\Experimenters\"   & folderEntry & "\Garbage\gsf " &_
 			  "/tempdir ..\Experimenters\"  & folderEntry & "\Garbage\tmp " &_
@@ -81,19 +118,16 @@ Function createZTreeShortcuts(experimenterFolderPath, folderEntry)
 			  "/paydir ..\Experimenters\"   & folderEntry & "\Payments " &_
 			  "/language en"
 	
-	Dim zTreeFolder
-	Set zTreeFolder = FileSystem.GetFolder("C:\CESS\Z-Tree")
-	Dim zTreeExecutable
-	Set zTreeExecutable = zTreeFolder.Files
+    Dim zTreeFolder : Set zTreeFolder = FileSystem.GetFolder("C:\CESS\Z-Tree")
+    Dim zTreeExecutable : Set zTreeExecutable = zTreeFolder.Files
 	
 	Dim zTreeShortcut
 	Dim serverFile
-	Dim WSHShell
-	Dim linkName
-	Set WSHShell = WScript.CreateObject("WScript.Shell")
+    Dim linkName 
+    
+    Dim WSHShell : Set WSHShell = WScript.CreateObject("WScript.Shell")
 	
-	Dim regex
-	Set regex = New RegExp
+    Dim regex : Set regex = New RegExp
 	regex.Global = false
 	regex.IgnoreCase = true
 	regex.Pattern = "^ztree-[0-9]+\.[0-9]+(\.[0-9])*\.exe$"
@@ -111,10 +145,13 @@ Function createZTreeShortcuts(experimenterFolderPath, folderEntry)
 	Next
 End Function
 
-
+'--
+' Prompts the experimenter for the Z-Tree folder name. Creates the folder
+' and all of the required links and subfolders.
+'--
 Function init()
 	Dim experimenterFolderPath
-	experimenterFolderPath = "C:\CESS\Experimenters"
+	experimenterFolderPath = ZTreePath
 
 	Dim folderEntry
 	folderEntry = getFolderName()
