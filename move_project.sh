@@ -45,7 +45,7 @@ set_flags(){
             h)
                 echo "----------------------------------"
                 echo "Usage:"
-                echo -e "./transfer_enso <options>"
+                echo -e "./move_project.sh <options>"
                 echo "Options:"
                 echo -e "\t-v\tverbose mode"
                 echo -e "\t-h\thelp"
