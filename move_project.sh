@@ -66,7 +66,7 @@ set_flags(){
 # Param $1: directory
 #-
 move_to(){
-    local directory="$1"
+    local directory="${1}"
 
     if [ "$directory" == "" ]; then
         display "Error: cannot cd to an non specified directory"
@@ -86,8 +86,9 @@ move_to(){
 # Param $2: haystack
 #-
 array_search(){
-    local needle=$1
-    local haystack=$2
+    local needle="${1}"
+    # expands array name param to (${name[@]})
+    local haystack=("${!2}") 
 
     if [ "$needle" == "" ]; then
         display "Error: Invalid file system heirarcy"
@@ -95,7 +96,7 @@ array_search(){
     fi
 
     local value
-    for value in ${haystack[@]}; do
+    for value in "${haystack[@]}"; do
         if [ "$needle" == "$value" ]; then
             return 1
         fi
@@ -111,7 +112,8 @@ array_search(){
 # Param $1: string
 #-
 display(){
-    local string=$1
+    local string="${1}"
+
     echo -e "$string"
 }
 
@@ -125,7 +127,8 @@ display(){
 # Param $1: string
 #-
 verbose_output(){
-    local string=$1
+    local string="${1}"
+
     if [ $verbose == 1 ]; then
         display "$string"
     fi
@@ -139,7 +142,8 @@ verbose_output(){
 # Parm $1: directory
 #-
 create_directory(){
-    local directory=$1
+    local directory="${1}"
+
     if [ ! -d "$directory" ]; then
         verbose_output "<-->creating directory $directory"
         mkdir $directory
@@ -153,8 +157,8 @@ create_directory(){
 # Parm $2: destination
 #-
 copy_file(){
-    local source_file="$1"
-    local destination="$2"
+    local source_file="${1}"
+    local destination="${2}"
     
     # check the ignore array
     array_search $source_file $ignore_files
@@ -178,8 +182,8 @@ copy_file(){
 # Param $2: destination_dir
 #-
 copy_directory(){
-    local source_dir=$1
-    local destination_dir=$2
+    local source_dir="${1}"
+    local destination_dir="${2}"
 
     # create the destination directory if it doesn't exist
     if [ ! -d $destination_dir ]; then
@@ -203,7 +207,7 @@ copy_directory(){
     #\
     local source_file
     local files=(*)
-    for source_file in ${files[@]}; do
+    for source_file in "${files[@]}"; do
 
         if [ -f "$source_file" ]; then
                 copy_file $source_file $destination_dir$source_file
