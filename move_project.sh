@@ -16,9 +16,11 @@
 #==============================================
 
 # Name of directories to ignore
+# Format: ignore_directories(dir1 dir2 dir3)
 ignore_directories=()
 
 # Name of files to ignore
+# Format: ignore_files(file1 file2 file3)
 ignore_files=()
 
 SRC_DIR="/location/to/project/source/"
@@ -210,7 +212,7 @@ copy_directory(){
 
             # determine if this directory should be ignored
             array_search $source_dir_name $ignore_directories
-            local ignore_directory=$?
+            local ignore_directory=$? # fetch return result from array_search
 
             # Only skip this directory if it is in the ignore directory array
             if [ "$ignore_directory" == 0 ]; then
