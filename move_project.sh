@@ -166,6 +166,10 @@ copy_file(){
 
     # Only skip this source_file if it's in the ingore array 
     if [ "$ignore_file" == 0 ]; then
+        # Remove file if it already exists                                                                                                                                                                                                 
+        if [ -f $destination ]; then
+            rm $destination
+        fi  
         cp -f $source_file $destination
         verbose_output "\t\tcopying $source_file to $destination"
     else
